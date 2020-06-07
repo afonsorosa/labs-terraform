@@ -4,13 +4,13 @@ provider "aws" {
 }
 
 resource "aws_instance" "hogwarts" {
-    count           =  3
+    count           =  2
     ami             =  "ami-064a0193585662d74"
     instance_type   =  "t2.micro"
     key_name        =  "${aws_key_pair.my_key.key_name}" // name resouce, name minha chave, key_name dentro de rosource
     security_groups = ["${aws_security_group.allow_ssh.name}"]
     tags = {
-        Name = "Hogwarts0-${count.index + 1}"
+        Name = "Hogwarts-0${count.index + 1}"
     }
 }
 
@@ -22,6 +22,13 @@ resource "aws_key_pair" "my_key" {
 
 resource "aws_security_group" "allow_ssh" {
     name = "allow_ssh"
+    
+    ingress {
+        from_port   = 0
+        to_port     = 0
+        protocol    = "-1"
+        self        = true
+  }
 
     ingress { // REGRAS DE ENTRADA DE REQUISIÇÕES, SÃO MEUS inboundS
         from_port    = 22
